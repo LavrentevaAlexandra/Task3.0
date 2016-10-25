@@ -1,5 +1,6 @@
 package com.lavr.third.entity;
 
+import com.lavr.third.report.Statistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,8 +14,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by 123 on 11.10.2016.
  */
 class Participant extends Thread {
-    private Lock lock = new ReentrantLock();
     private static final Logger LOG = LogManager.getLogger();
+
+    private Lock lock = new ReentrantLock();
     private long participantId;
     private int money;
     private boolean wish;
@@ -55,9 +57,11 @@ class Participant extends Thread {
                             int delta = new Random().nextInt(money - workingPrise);
                             participantPrice = workingPrise + delta;
                             bidding.getLot().setLotPrice(participantPrice);
-                            System.out.println("Participant " + getId() + " : " + participantPrice);
+                            Statistics.participantBet(getId(),participantPrice);
+                            //System.out.println("Participant " + getId() + " : " + participantPrice);
                         } else {
-                            System.out.println("Participant " + getId() + " skips, not enough money :" + getMoney());
+                            Statistics.participantSkips(getId(),getMoney());
+                            //System.out.println("Participant " + getId() + " skips, not enough money :" + getMoney());
                             wish = false;
                             break;
                         }
